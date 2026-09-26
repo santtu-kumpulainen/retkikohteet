@@ -39,6 +39,14 @@
             <button type="submit">Lisää retkikohde</button>
         </form>
 
+        <section>
+    <h2>Retkikohteet</h2>
+
+    <div id="destinations-list">
+        <p>Ladataan retkikohteita...</p>
+    </div>
+</section>
+
         <p id="message"></p>
     </main>
 
