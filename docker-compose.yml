@@ -6,6 +6,10 @@ services:
       - "8001:80"
     depends_on:
       - db
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     volumes:
       - ./:/var/www/html
 
@@ -14,13 +18,12 @@ services:
     container_name: retkikohteet-db
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: retkikohteet
-      MARIADB_USER: retkikohteet
-      MARIADB_PASSWORD: retkikohteet
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     volumes:
       - retkikohteet_db_data:/var/lib/mysql
 
 volumes:
   retkikohteet_db_data:
-

@@ -35,3 +35,12 @@ retkikohteet/
 ├── docker-compose.yml
 ├── README.md
 └── .dockerignore
+
+## Kansioiden tarkoitus
+
+- api/ sisältää backendin API-toiminnot.
+- config/ sisältää sovelluksen asetukset ja tietokantayhteyden.
+- database/ sisältää tietokannan alustamiseen liittyvät tiedostot.
+- public/ sisältää selaimelle näkyvän frontendin.
+- public/css/ sisältää CSS-tyylit.
+- public/js/ sisältää JavaScript-koodin.

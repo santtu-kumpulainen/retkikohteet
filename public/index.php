@@ -1,3 +1,5 @@
 <?php
 
-echo "Retkikohteet-sovellus toimii!";
+require_once __DIR__ . '/../config/database.php';
+
+echo "PDO-yhteys toimii!";
