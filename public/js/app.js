@@ -32,3 +32,46 @@ form.addEventListener('submit', async (event) => {
         message.textContent = error.message;
     }
 });
+
+const destinationsList = document.querySelector('#destinations-list');
+
+async function loadDestinations() {
+    try {
+        // Fetch all destinations from API
+        const response = await fetch('/api/destinations.php');
+
+        if (!response.ok) {
+            throw new Error('Retkikohteiden lataaminen epäonnistui.');
+        }
+
+        const destinations = await response.json();
+
+        // Clear loading message
+        destinationsList.innerHTML = '';
+
+        if (destinations.length === 0) {
+            destinationsList.innerHTML = '<p>Ei retkikohteita.</p>';
+            return;
+        }
+
+        // Create a list of destinations
+        destinations.forEach((destination) => {
+            const article = document.createElement('article');
+
+            article.innerHTML = `
+                <h3>${destination.name}</h3>
+                <p><strong>Sijainti:</strong> ${destination.location}</p>
+                <p><strong>Tyyppi:</strong> ${destination.type}</p>
+                <p><strong>Vaikeustaso:</strong> ${destination.difficulty}</p>
+                <p>${destination.description ?? ''}</p>
+            `;
+
+            destinationsList.appendChild(article);
+        });
+    } catch (error) {
+        // Show loading error
+        destinationsList.innerHTML = `<p>${error.message}</p>`;
+    }
+}
+
+loadDestinations();
