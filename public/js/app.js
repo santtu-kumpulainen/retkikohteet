@@ -104,6 +104,10 @@ async function showDestination(id) {
     Muokkaa
 </button>
 
+<button onclick="showWeather(${destination.id})">
+    Näytä sää
+</button>
+
 <button onclick="deleteDestination(${destination.id})">
     Poista
 </button>
@@ -239,6 +243,56 @@ async function deleteDestination(id) {
         await loadDestinations();
     } catch (error) {
         // Show delete error
+        destinationsList.innerHTML = `<p>${error.message}</p>`;
+    }
+}
+
+async function showWeather(id) {
+    try {
+        // Fetch weather for destination
+        const response = await fetch(`/api/destination-weather.php?id=${id}`);
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Säätietojen hakeminen epäonnistui.');
+        }
+
+        const weather = result.weather;
+        const current = weather.current;
+
+        // Show current weather
+        destinationsList.innerHTML = `
+            <article>
+                <h2>${result.destination.name} – Sää</h2>
+
+                <p>
+                    <strong>Lämpötila:</strong>
+                    ${current.temperature_2m} °C
+                </p>
+
+                <p>
+                    <strong>Tuulen nopeus:</strong>
+                    ${current.wind_speed_10m} km/h
+                </p>
+
+                <p>
+                    <strong>Sijainti:</strong>
+                    ${result.destination.latitude},
+                    ${result.destination.longitude}
+                </p>
+            </article>
+
+            <button onclick="showDestination(${id})">
+                Takaisin kohteeseen
+            </button>
+
+            <button onclick="loadDestinations()">
+                Takaisin listaan
+            </button>
+        `;
+    } catch (error) {
+        // Show weather error
         destinationsList.innerHTML = `<p>${error.message}</p>`;
     }
 }
