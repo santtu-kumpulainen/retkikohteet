@@ -101,12 +101,16 @@ async function showDestination(id) {
     <p><strong>Suunniteltu päivämäärä:</strong> ${destination.planned_date ?? 'Ei määritetty'}</p>
 
     <button onclick="editDestination(${destination.id})">
-        Muokkaa
-    </button>
+    Muokkaa
+</button>
 
-    <button onclick="loadDestinations()">
-        Takaisin listaan
-    </button>
+<button onclick="deleteDestination(${destination.id})">
+    Poista
+</button>
+
+<button onclick="loadDestinations()">
+    Takaisin listaan
+</button>
 </article>
 
             
@@ -208,6 +212,34 @@ async function updateDestination(event, id) {
         await showDestination(id);
     } catch (error) {
         document.querySelector('#edit-message').textContent = error.message;
+    }
+}
+
+async function deleteDestination(id) {
+    // Ask for confirmation before deleting
+    const confirmed = confirm('Haluatko varmasti poistaa tämän retkikohteen?');
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        // Send delete request to API
+        const response = await fetch(`/api/destinations.php?id=${id}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Retkikohteen poistaminen epäonnistui.');
+        }
+
+        // Return to destination list
+        await loadDestinations();
+    } catch (error) {
+        // Show delete error
+        destinationsList.innerHTML = `<p>${error.message}</p>`;
     }
 }
 
