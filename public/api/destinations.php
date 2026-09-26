@@ -203,6 +203,56 @@ if ($method === 'PUT') {
     exit;
 }
 
+if ($method === 'DELETE') {
+    // Get and validate destination ID
+    $id = $_GET['id'] ?? null;
+
+    if ($id === null || !ctype_digit($id) || (int)$id <= 0) {
+        http_response_code(400);
+
+        echo json_encode([
+            'error' => 'Invalid destination ID'
+        ]);
+
+        exit;
+    }
+
+    // Check that destination exists
+    $stmt = $pdo->prepare(
+        'SELECT id FROM destinations WHERE id = :id'
+    );
+
+    $stmt->execute([
+        ':id' => $id
+    ]);
+
+    if (!$stmt->fetch()) {
+        http_response_code(404);
+
+        echo json_encode([
+            'error' => 'Destination not found'
+        ]);
+
+        exit;
+    }
+
+    // Delete destination
+    $stmt = $pdo->prepare(
+        'DELETE FROM destinations WHERE id = :id'
+    );
+
+    $stmt->execute([
+        ':id' => $id
+    ]);
+
+    echo json_encode([
+        'message' => 'Destination deleted',
+        'id' => $id
+    ]);
+
+    exit;
+}
+
 http_response_code(405);
 
 echo json_encode([
