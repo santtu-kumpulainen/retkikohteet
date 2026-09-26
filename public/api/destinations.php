@@ -78,6 +78,24 @@ if ($method === 'POST') {
         }
     }
 
+    // Validate coordinates
+if (
+    !is_numeric($data['latitude']) ||
+    !is_numeric($data['longitude']) ||
+    $data['latitude'] < -90 ||
+    $data['latitude'] > 90 ||
+    $data['longitude'] < -180 ||
+    $data['longitude'] > 180
+) {
+    http_response_code(400);
+
+    echo json_encode([
+        'error' => 'Invalid coordinates'
+    ]);
+
+    exit;
+}
+
     $sql = "
         INSERT INTO destinations
         (name, location, description, latitude, longitude, type, difficulty, planned_date)
@@ -124,6 +142,17 @@ if ($method === 'PUT') {
 
     // Read JSON data from request
     $data = json_decode(file_get_contents('php://input'), true);
+
+// Validate JSON input
+if (!is_array($data)) {
+    http_response_code(400);
+
+    echo json_encode([
+        'error' => 'Invalid JSON data'
+    ]);
+
+    exit;
+}
 
     $requiredFields = [
         'name',
