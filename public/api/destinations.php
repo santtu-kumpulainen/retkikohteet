@@ -7,7 +7,46 @@ require_once __DIR__ . '/../../config/database.php';
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    $stmt = $pdo->query('SELECT * FROM destinations ORDER BY id DESC');
+    $id = $_GET['id'] ?? null;
+
+    if ($id !== null) {
+        if (!ctype_digit($id) || (int)$id <= 0) {
+            http_response_code(400);
+
+            echo json_encode([
+                'error' => 'Invalid destination ID'
+            ]);
+
+            exit;
+        }
+
+        $stmt = $pdo->prepare(
+            'SELECT * FROM destinations WHERE id = :id'
+        );
+
+        $stmt->execute([
+            ':id' => $id
+        ]);
+
+        $destination = $stmt->fetch();
+
+        if (!$destination) {
+            http_response_code(404);
+
+            echo json_encode([
+                'error' => 'Destination not found'
+            ]);
+
+            exit;
+        }
+
+        echo json_encode($destination);
+        exit;
+    }
+
+    $stmt = $pdo->query(
+        'SELECT * FROM destinations ORDER BY id DESC'
+    );
 
     $destinations = $stmt->fetchAll();
 
