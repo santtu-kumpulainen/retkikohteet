@@ -22,9 +22,9 @@
         </a>
 
         <nav class="main-nav" aria-label="Päänavigaatio">
-            <a href="#destinations-section">Kohteet</a>
-            <a href="#add-destination-section">Lisää kohde</a>
             <a href="#map-section">Kartta</a>
+            <a href="#add-destination-section">Lisää kohde</a>
+            <a href="#destinations-section">Kohteet</a>
         </nav>
     </div>
 </header>

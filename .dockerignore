@@ -2,3 +2,4 @@
 .github
 issues
 *.md
+.env
