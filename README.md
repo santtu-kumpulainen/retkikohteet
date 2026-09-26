@@ -44,3 +44,20 @@ retkikohteet/
 - public/ sisältää selaimelle näkyvän frontendin.
 - public/css/ sisältää CSS-tyylit.
 - public/js/ sisältää JavaScript-koodin.
+
+## Tietokanta
+
+Sovelluksen retkikohteet tallennetaan `destinations`-tauluun.
+
+| Kenttä | Tyyppi | Kuvaus |
+|---|---|---|
+| `id` | INT UNSIGNED | Yksilöllinen tunniste |
+| `name` | VARCHAR(150) | Retkikohteen nimi |
+| `location` | VARCHAR(150) | Kohteen sijainti |
+| `description` | TEXT | Kohteen kuvaus |
+| `latitude` | DECIMAL(9,6) | Leveysaste |
+| `longitude` | DECIMAL(9,6) | Pituusaste |
+| `type` | VARCHAR(50) | Kohteen tyyppi |
+| `difficulty` | VARCHAR(50) | Vaikeustaso |
+| `planned_date` | DATE | Suunniteltu retkipäivä |
+| `created_at` | TIMESTAMP | Tietueen luontiaika |
