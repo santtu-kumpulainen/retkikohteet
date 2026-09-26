@@ -108,6 +108,101 @@ if ($method === 'POST') {
     exit;
 }
 
+if ($method === 'PUT') {
+    // Get and validate destination ID
+    $id = $_GET['id'] ?? null;
+
+    if ($id === null || !ctype_digit($id) || (int)$id <= 0) {
+        http_response_code(400);
+
+        echo json_encode([
+            'error' => 'Invalid destination ID'
+        ]);
+
+        exit;
+    }
+
+    // Read JSON data from request
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $requiredFields = [
+        'name',
+        'location',
+        'latitude',
+        'longitude',
+        'type',
+        'difficulty'
+    ];
+
+    // Check required fields
+    foreach ($requiredFields as $field) {
+        if (!isset($data[$field]) || trim((string)$data[$field]) === '') {
+            http_response_code(400);
+
+            echo json_encode([
+                'error' => "Missing required field: $field"
+            ]);
+
+            exit;
+        }
+    }
+
+    // Check that destination exists
+    $stmt = $pdo->prepare(
+        'SELECT id FROM destinations WHERE id = :id'
+    );
+
+    $stmt->execute([
+        ':id' => $id
+    ]);
+
+    if (!$stmt->fetch()) {
+        http_response_code(404);
+
+        echo json_encode([
+            'error' => 'Destination not found'
+        ]);
+
+        exit;
+    }
+
+    // Update destination
+    $sql = "
+        UPDATE destinations
+        SET
+            name = :name,
+            location = :location,
+            description = :description,
+            latitude = :latitude,
+            longitude = :longitude,
+            type = :type,
+            difficulty = :difficulty,
+            planned_date = :planned_date
+        WHERE id = :id
+    ";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        ':id' => $id,
+        ':name' => trim($data['name']),
+        ':location' => trim($data['location']),
+        ':description' => $data['description'] ?? null,
+        ':latitude' => $data['latitude'],
+        ':longitude' => $data['longitude'],
+        ':type' => trim($data['type']),
+        ':difficulty' => trim($data['difficulty']),
+        ':planned_date' => $data['planned_date'] ?? null
+    ]);
+
+    echo json_encode([
+        'message' => 'Destination updated',
+        'id' => $id
+    ]);
+
+    exit;
+}
+
 http_response_code(405);
 
 echo json_encode([
