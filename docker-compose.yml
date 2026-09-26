@@ -1,0 +1,26 @@
+services:
+  app:
+    build: .
+    container_name: retkikohteet-app
+    ports:
+      - "8001:80"
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www/html
+
+  db:
+    image: mariadb:11
+    container_name: retkikohteet-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: retkikohteet
+      MARIADB_USER: retkikohteet
+      MARIADB_PASSWORD: retkikohteet
+    volumes:
+      - retkikohteet_db_data:/var/lib/mysql
+
+volumes:
+  retkikohteet_db_data:
+
